@@ -1,0 +1,63 @@
+{
+  "extraction_plan": {
+    "bayc_to_mayc_m1_m2": {
+      "method": "DETERMINISTIC_FORMULA",
+      "description": "MAYC contract getMutantId(serumType, apeId) = (apeId * 2) + serumType + 10000. Scan Transfer(from=0x0) events on MAYC in token-ID range [10000, 29999]. Reverse formula gives BAYC parent + serum type.",
+      "source_of_truth": "on-chain ERC-721 Transfer event + verified contract formula",
+      "confidence": "CONFIRMED"
+    },
+    "bayc_to_mayc_m3": {
+      "method": "TRANSACTION_INPUT_DECODE",
+      "description": "Only 8 MEGA mutant tokens (IDs 30000-30007) exist. Scan Transfer(from=0x0) on MAYC in that range, then decode the mutateApeWithSerum(uint256,uint256) tx input to extract apeId.",
+      "source_of_truth": "on-chain tx input calldata + Transfer event",
+      "confidence": "CONFIRMED",
+      "max_tokens": 8
+    },
+    "bayc_to_bakc": {
+      "method": "IDENTITY_MAPPING",
+      "description": "BAKC adoptDog(uint256 baycTokenId) calls _safeMint(msg.sender, baycTokenId). BAKC token ID IS the BAYC token ID. Scan Transfer(from=0x0) on BAKC to get the set of minted BAKC IDs.",
+      "source_of_truth": "on-chain verified contract source + Transfer event",
+      "confidence": "CONFIRMED"
+    }
+  },
+  "contracts": {
+    "BAYC": {
+      "address": "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+      "supply": 10000
+    },
+    "MAYC": {
+      "address": "0x60E4d786628Fea6478F785A6d7e704777c86a7c6",
+      "supply": 19559
+    },
+    "BAKC": {
+      "address": "0xba30E5F9Bb24caa003E9f2f0497Ad287FDF95623",
+      "supply": 9602
+    },
+    "BACC_SERUMS": {
+      "address": "0x22c36BfdCef207F9c0CC941936eff94D4246d14A",
+      "role": "Serum ERC-1155 (burned on mutation)"
+    }
+  },
+  "token_id_ranges": {
+    "BAYC": "0\u20139999",
+    "MAYC_public_sale": "0\u20139999 (no BAYC parent)",
+    "MAYC_M1_M2": "10000\u201329999",
+    "MAYC_M3_MEGA": "30000\u201330007",
+    "BAKC": "0\u20139999 (== BAYC token ID)"
+  },
+  "formulas": {
+    "M1_mutant_id": "bayc_id * 2 + 0 + 10000",
+    "M2_mutant_id": "bayc_id * 2 + 1 + 10000",
+    "reverse_bayc_id": "(mayc_id - 10000) // 2",
+    "reverse_serum": "(mayc_id - 10000) % 2   \u2192 0=M1, 1=M2"
+  },
+  "events_used": [
+    "Transfer(address indexed from, address indexed to, uint256 indexed tokenId) \u2014 0xddf252ad\u2026"
+  ],
+  "potential_failure_modes": [
+    "RPC rate limits on eth_getLogs \u2014 mitigated by adaptive chunking",
+    "M3 MEGA mutations require tx input decode \u2014 only 8 txs, trivially handled",
+    "BAKC adoptNDogs() batch minting \u2014 still uses same token-ID = BAYC-ID rule",
+    "Public-sale MAYC (0-9999) have NO BAYC parent \u2014 must not be confused with mutations"
+  ]
+}

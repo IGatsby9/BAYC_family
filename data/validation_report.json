@@ -1,0 +1,68 @@
+{
+  "total_rows": 10000,
+  "checks": [
+    {
+      "name": "row_count_10000",
+      "status": "PASS",
+      "detail": "Got 10000, expected 10000"
+    },
+    {
+      "name": "all_bayc_ids_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_extra_bayc_ids",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bayc_id_unique",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mayc_maps_to_one_bayc",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bakc_maps_to_one_bayc",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bakc_id_equals_bayc_id",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "m1_m2_formula_consistent",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "m3_token_ids_in_range",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mayc_supply_crosscheck",
+      "status": "PASS",
+      "detail": "10000 public + 9559 mutations = 19559, on-chain totalSupply = 19559"
+    }
+  ],
+  "distribution": {
+    "bayc_with_0_mayc": 2385,
+    "bayc_with_1_mayc": 5677,
+    "bayc_with_2_mayc": 1932,
+    "bayc_with_3_mayc": 6,
+    "bayc_with_bakc": 9602,
+    "bayc_without_bakc": 398,
+    "total_m1_mutations": 7240,
+    "total_m2_mutations": 2312,
+    "total_m3_mutations": 7
+  },
+  "anomalies": [],
+  "overall": "PASS"
+}
